@@ -38,7 +38,8 @@ public class Stack {
 
 위 코드에서는 Stack이 커졌다가 줄어들었을 때 Stack이 객체들의 다 쓴 참조를 가지고 있기 때문에 Stack에서 꺼내진 객체들을 가비지 컬렉터가 회수하지 않습니다.
 
-![Stack 메모리 누수.PNG](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/83cc8fd4-bbd8-40f0-b36a-f34225a748b9/Stack_%EB%A9%94%EB%AA%A8%EB%A6%AC_%EB%88%84%EC%88%98.png)
+![Stack 메모리 누수 PNG](https://user-images.githubusercontent.com/90227655/206167818-250940e0-0425-4d04-a6c1-1bfa5178da46.png)
+
 
 결국 이 Stack이 객체들의 다 쓴 참조를 계속해서 가지고 있게 되고 살려둔 객체가 참조 하는 다른 모든 객체들도 메모리 회수하지 못하는 상태가 되어 GC의 활동과 메모리 사용량이 늘어나면서 점점 성능이 저하되게 됩니다.
 
@@ -62,7 +63,8 @@ public class Stack {
 }
 ```
 
-![Stack 메모리 누수 해결.PNG](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d4ab9bf4-5d8b-4c8a-bff5-3d3e269e7f7a/Stack_%EB%A9%94%EB%AA%A8%EB%A6%AC_%EB%88%84%EC%88%98_%ED%95%B4%EA%B2%B0.png)
+![Stack 메모리 누수 해결 PNG](https://user-images.githubusercontent.com/90227655/206167797-1250c323-c89e-46b7-bfae-a771c8e071b9.png)
+
 
 이렇게 null을 통해 참조를 해제한다면, 프로그램이 null처리한 참조를 실수로 사용하려 할 때NullPointerException을 던지며 종료되기 때문에 오류를 조기에 발견하는 장점도 가질 수 있게 됩니다.
 
