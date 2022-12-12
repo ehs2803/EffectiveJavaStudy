@@ -3,6 +3,7 @@
 - Comparable 인터페이스는 객체를 정렬하는데 사용되는 메서드인 compareTo를 정의하고 있다.
 
 # Comparable 인터페이스 특징
+![image](https://user-images.githubusercontent.com/65898555/207048668-2cb03338-3fb8-494b-b4da-fe8ab85c5eea.png)
 
 - 자바에서 같은 타입의 인스턴스를 비교해야만 하는 클래스들은 모두 Comparable 인터페이스를 구현하고 있다.
 - Boolean 타입을 제외한 래퍼 클래스와 알파벳, 연대같이 순서가 명확한 클래스들은 모두 정렬이 가능하다.
@@ -74,14 +75,17 @@ Comparable을 구현한 클래스는 모든 x, y에 대하여 sgn(x.compareTo(y)
 
 
 ☑️ 추이성
+
 첫 번째가 두번째보다 크고 두 번째가 세번째보다 크면 첫번째는 세번째보다 커야한다.
 Comparable을 구현한 클래스는 추이성을 보장해야 한다. 즉, (x.compareTo(y)>0 && y.compareTo(z) > 0)이면 x.compareTo(z) > 0 이다.
 
 ☑️ 반사성
+
 크기가 같은 객체들끼리는 어떤 객체와 비교하더라도 항상 같다.
 Comparable을 구현한 클래스는 모든 z에 대해 x.compareTo(y) == 0이면 sgn(x.compareTo(z)) == sgn(y.compareTo(z))이다.
 
 ☑️ equals
+
 compareTo 메서드로 수행한 동치성테스트 결과가 equals와 같아야한다.
 (x.compareTo(y) == 0) == (x.equals(y))여야 한다. Comparable을 구현하고 이 권고를 지키지 않는 모든 클래스는 그 사실을 명시해야 한다. (주의: 이 클래스의 순서는 equals 메서드와 일관되지 않다.)
 
