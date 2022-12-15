@@ -1,0 +1,1 @@
+# [link](https://medium.com/@bnm1128/effective-java-item-12-tostring%EC%9D%84-%ED%95%AD%EC%83%81-%EC%9E%AC%EC%A0%95%EC%9D%98-%ED%95%98%EB%9D%BC-8723f9d4f35f)
