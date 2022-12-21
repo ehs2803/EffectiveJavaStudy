@@ -1,0 +1,1 @@
+[link](https://medium.com/@bnm1128/effective-java-item-15-%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%A4%EB%B2%84%EC%9D%98-%EC%A0%91%EA%B7%BC-%EA%B6%8C%ED%95%9C%EC%9D%84-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EB%9D%BC-48f3b04cb239)
