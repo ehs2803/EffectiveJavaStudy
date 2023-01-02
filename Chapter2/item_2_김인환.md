@@ -115,6 +115,13 @@ public class NutritionFacts {
 
 ### 빌더 패턴
 
+- 점층적 생성자 패턴의 안정성과 자바빈즈 패턴의 가독성을 모두 취한 패턴
+- 빌더 패턴 사용 방법
+  - 먼저, 필수 매개변수만으로 생성자를 호출해 빌더 객체 생성
+  - 빌더 객체의 세터메서드를 활용해 선택 매개변수들을 설정
+  - 이 후 build 메서드 호출로 원래 원하던 객체 생성
+- 메소드 체이닝이 가능
+
 ```java
 public class NutritionFacts {
     private final int servingSize;
@@ -140,6 +147,7 @@ public class NutritionFacts {
             this.servings = servings;
         }
 
+        // 빌더 자신을 반환하기 때문에 연쇄적인 호출이 가능
         public Builder calories(int val) {
             calories = val;
             return this;
@@ -180,6 +188,8 @@ public class NutritionFacts {
     }
 }
 ```
+
+- 계층적으로 설계된 클래스에 함께 쓰기 용이
 
 ```java
 public abstract class Pizza {
@@ -236,6 +246,15 @@ public class NyPizza extends Pizza {
 }
 ```
 
+
+- '계층적 빌더' 사용 예시
+```java
+NyPizza pizza = new NyPizza.Builder(SMALL)
+        .addTopping(SAUSAGE).addTopping(ONION).build();
+
+Calzone calzone = new Calzone.Builder()
+        .addTopping(HAM).sauceInside().build();
+```
 ### 빌더 패턴을 사용할 때 알아두면 좋은 점
 
 - 객체를 만들기 전에 빌더부터 만들어야 함
