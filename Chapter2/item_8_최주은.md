@@ -1,0 +1,1 @@
+# [link](https://jueun275.tistory.com/entry/item8-finalizer%EC%99%80-cleaner-%EC%82%AC%EC%9A%A9%EC%9D%84-%ED%94%BC%ED%95%98%EB%9D%BC)
