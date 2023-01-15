@@ -3,9 +3,11 @@
 ## 1. 상속을 고려한 문서화와 설계
 
 
-메서드를 재정의하면 어떤 일이 일어나는지를 정확히 정리하여 문서로 남겨야 한다. 즉, 상속용 클래스는 재정의할 수 있는 메서드들을 내부적으로 어떻게 이용하는지(자기사용) 문서로 남겨야한다.
+메서드를 재정의하면 어떤 일이 일어나는지를 정확히 정리하여 문서로 남겨야 한다. 
 
-클래스의 API로 공개된 메서드에서 클래스 자신의 또 다른 메서드를 호출할 수도 있다.(전 장의 addAll 예시) 그런데 재정의가 가능한 메서드라면 그 사실을 api 명세에 적시해야 한다.
+즉, 상속용 클래스는 재정의할 수 있는 메서드들을 내부적으로 어떻게 이용하는지(자기사용) 문서로 남겨야한다.
+
+재정의할 수 있는 메서드란 public과 protected 메서드 중 final이 아닌 모든 메서드.
 
 ![image](https://user-images.githubusercontent.com/65898555/212077868-253e4edb-6763-4239-bf0b-5785c5f211ce.png)
 
@@ -29,77 +31,114 @@ API문서의 메서드 설명 끝에서 종종 "Implementation Requiredments"로
 
 Super클래스에서 하위 클래스에서 재정의가 가능한 overrideMe 메서드를 호출한다.
 
-```java
+
+'''java
 public class Super {
+
+    // 잘못된 예 - 생성자가 재정의 가능 메서드를 호출한다
     public Super() {
         overrideMe();
     }
 
-    public void overrideMe() {
-        System.out.println("super method");
-    }
+    public void overrideMe() { }
 }
 ```
-Sub 클래스에서 부모 클래스의 overrideMe를 재정의하고 Sub 클래스를 생성하면 상위 클래스의 생성자가 하위 클래스의 생성자보다 먼저 동작하므로 null이 출력된다.
+상속용 클래스 Super - 생성자가 재정의 가능 메서드를 호출함
 
 ```java
-public class Sub extends Super{
-    private String str;
-    public Sub() {
-        str = "Sub String";
+public class Sub extends Super {
+
+    // 초기화되지 않은 final 필드. 생성자에서 초기화한다.
+    private final Instant instant;
+
+    Sub() {
+        instant = Instant.now();
     }
 
+    // 재정의 가능 메서드. 상위 클래스의 생성자가 호출된다.
     @Override
     public void overrideMe() {
-        System.out.println(str);
-    }
-
-    public static void main(String[] args) {
-        Sub sub = new Sub();
+        System.out.println(instant);
     }
 }
 ```
+하위 클래스 Sub - 생성자에서 초기화하는 필드를 지니고 있고, 재정의한 메서드에서 이를 의존함
+
+```java
+public class Item19 {
+
+    public static void main(String[] args) {
+
+        Sub sub = new Sub(); // Super 생성자 호출 -> overrideMe() 호출 -> null 출력 -> Sub 생성자 호출
+        sub.overrideMe(); // 현재 시간 출력
+
+        /**
+         * null
+         * 2022-05-05T23:45:22.066694Z
+         */
+    }
+}
+```
+- 상위 클래스의 생성자가 하위 클래스의 생성자보다 먼저 실행됨
+- 하위 클래스에서 재정의한 메서드가 하위 클래스의 생성자보다 먼저 호출됨
+- 이때, 재정의한 메서드가 하위 클래스의 생성자에서 초기화하는 값을 의존하므로 NullPointerException이 발생하게 됨
+ 
+
+
+private, final, static 메서드는 재정의가 불가능하므로 생성자에서 안심하고 호출해도 된다.
 
 ## 4. 상속용으로 설계하지 않은 클래스는 상속을 금지해라
 
-부모 클래스의 내부를 수정했음에도 이를 확장한 자식 클래스에서 문제가 생겼다는 버그 리포트를 받는 일이 드물지 않다. 상속을 금지하는 방법은 다음과 같다.
+#### 보통의구체 클래스를 그 내부만 수정했음에도 이를 확장한 자식 클래스에서 문제가 생겼다는 버그 리포트를 받는 일이 드물지 않다. 상속을 금지하는 방법은 다음과 같다.
 
 - 클래스를 final로 선언
-- 모든 생성자를 private or package private로 지정
+- 모든 생성자를 private or package private로 지정하고, public 정적 팩터리를 만들어준다.
 
-다음은 클래스의 동작을 유지하면서 재정의 가능한 메서드를 사용하는 코드를 제거할 수 있는 방법이다. 각각의 재정의 가능한 메서드는 자신의 본문 코드를 private '도우미 메서드'로 옮기고 이 도우미 메서드를 호출하도록 수정 한다. 그런 다음 재정의 가능 메서드를 호출하는 다른 코드들도 모두 이 도우미 메서드를 직접 호출하도록 수정한다.
+#### 대신 핵심 기능을 정의한 인터페이스를 구현해라
+
+#### 표준 인터페이스를 구현하지 않았는데 상속이 필요하다면?
+- 재정의 가능 메서드를 호출하는 사용 코드를 모두 제거하라 → 메서드를 재정의해도 다른 메서드의 동작에 영향을 주지 않음
+- 먼저 각각의 재정의 가능 메서드의 내부 코드를 private 도우미 메서드로 옮기고, 이 도우미 메서드를 호출하도록 수정한다
+- 그런 다음 재정의 가능 메서드를 호출하는 다른 코드들도 모두 이 도우미 메서드를 직접 호출하도록 수정한다
 
 ```java
-public class Super {
-    public Super() {
-        //overrideMe();
-    	helperMethod();
-    }
+public class Concrete {
+
+    public Concrete() {}
 
     public void overrideMe() {
-    	helperMethod();
+        System.out.println("overrideMe");
     }
-    
-    private void helperMethod() {
-    	System.out.println("super method");
+
+    public void doSomething() {
+        overrideMe();
     }
 }
 ```
+Concrete 클래스 - 재정의 가능 메서드가 그대로 노출됨
 ```java
-public class Sub extends Super{
-    private String str;
-    public Sub() {
-        str = "Sub String";
-    }
+public class BetterConcrete {
 
-    @Override
+    public BetterConcrete() {}
+
     public void overrideMe() {
-        System.out.println(str);
+        helper();
     }
 
-    public static void main(String[] args) {
-        Sub sub = new Sub();
-        sub.overrideMe();
+    private void helper() {
+        System.out.println("overrideMe");
+    }
+
+    public void doSomething() {
+        helper();
     }
 }
 ```
+BetterConcrete - 재정의 가능 메서드의 내용을 private 도우미 메서드로 옮김
+
+
+# 결론 
+
+상속용 클래스를 설계하기란 어렵다
+
+따라서 상속이 분명하게 필요한 것이 아니라면 금지하라
