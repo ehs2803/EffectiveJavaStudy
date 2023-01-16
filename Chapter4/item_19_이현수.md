@@ -31,8 +31,7 @@ API문서의 메서드 설명 끝에서 종종 "Implementation Requiredments"로
 
 Super클래스에서 하위 클래스에서 재정의가 가능한 overrideMe 메서드를 호출한다.
 
-
-'''java
+```java
 public class Super {
 
     // 잘못된 예 - 생성자가 재정의 가능 메서드를 호출한다
