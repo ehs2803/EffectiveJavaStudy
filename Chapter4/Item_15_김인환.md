@@ -52,4 +52,3 @@
 - 프로그램 요소의 접근성은 가능한 한 최소한으로
 - public 클래스는 상수용 public static final 필드 외에는 어떠한 public 필드도 가져선 안됨
   - public static final 필드가 참조하는 객체가 불변인지 확인하라
-
